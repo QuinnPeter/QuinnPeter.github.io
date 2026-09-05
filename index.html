@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#edf3ee">
+  <title>妙妙的喂饭日历</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🐾%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js"></script><script defer src="app.js?v=cloud1"></script>
+</head>
+<body>
+  <header class="topbar"><a href="#" class="brand"><span aria-hidden="true">🐾</span> 妙妙的喂饭日历</a><span class="edition">2026 · 九月</span><span id="save-status" role="status" aria-live="polite">正在读取记录…</span></header>
+  <section id="auth-panel" class="auth-panel">
+    <p class="eyebrow">妙妙大王的专属小日历</p><h1>每一顿，<br>都好好记下来。</h1>
+    <p>连接你的私有记录，在手机和电脑上继续照顾妙妙。</p>
+    <form id="auth-form"><label for="auth-token">GitHub 授权钥匙</label><input id="auth-token" type="password" autocomplete="off" spellcheck="false" required placeholder="粘贴仅限数据仓库的授权令牌">
+    <label class="remember"><input id="remember-token" type="checkbox">在这台私人设备上保持连接</label>
+    <button id="connect" class="primary" type="submit">进入妙妙的日历</button><p id="auth-error" role="status" aria-live="polite"></p></form>
+    <details><summary>第一次使用怎么连接？</summary><p>使用 QuinnPeter 账号创建细粒度令牌，只选择私有仓库 miaomiao-data，授予 Contents 的 Read and write 权限。把令牌填在这里，令牌只用于向 GitHub 请求你的记录。</p><p>默认只在本次浏览器会话保存授权；选择保持连接后会保存在当前设备的浏览器中。不要在公共设备上勾选。令牌到期后可更换。</p></details>
+  </section>
+  <div id="connection-tools" class="connection-tools" hidden><span>私人日历 · GitHub 同步</span><button id="reconnect">更新授权</button><button id="logout">退出</button></div>
+  <main class="workspace" id="workspace" hidden>
+    <aside class="sidebar">
+      <p class="eyebrow">给妙妙的每一顿</p>
+      <h1>好好吃饭，<br>慢慢长大。</h1>
+      <p class="intro">喂完饭，给今天打个勾。<br>把这份小小的照顾记下来。</p>
+      <section class="today-card" aria-labelledby="today-label">
+        <span class="card-kicker" id="today-label">今天</span><div class="today-date" id="today-date">—</div>
+        <div id="today-portion" class="portion"></div>
+        <button id="open-weight" class="weight-today" disabled><span>今日体重</span><strong id="today-weight">3.60 kg</strong><small id="today-weight-source">初始体重</small><span class="weight-edit">记录 / 修改 ›</span></button>
+        <button id="open-today-record" class="primary" disabled>记录本次喂食</button>
+        <button id="today-action" class="primary" disabled>正在读取…</button>
+      </section>
+      <section class="progress-card" aria-label="本月完成进度">
+        <div class="progress-heading"><span>九月的小成就</span><span><strong id="completed">0</strong><span class="muted"> / 29 天</span></span></div>
+        <progress id="progress" value="0" max="29" aria-label="已完成天数"></progress>
+        <p id="encouragement">第一顿，就从一个小勾开始。</p>
+      </section>
+      <p class="instruction">点击日历里当天的格子即可打勾；再次点击，可以取消。</p>
+      <button id="open-records" class="records-button">查看 / 补记分次喂食</button>
+      <div class="backup-tools"><button id="export">导出备份</button><button id="import">恢复备份</button><input id="file" type="file" accept=".json,application/json" hidden></div>
+      <details><summary>记录保存在哪里？</summary><p>记录保存到你的 GitHub 私有仓库，手机和电脑共用同一份记录。显示“已同步至私有仓库”表示写入成功；离线操作会先暂存在当前浏览器，连接后再同步。</p><p>换设备后重新授权即可读取记录。请偶尔导出一份备份。退出会清除当前浏览器的授权与记录缓存，不会删除仓库里的记录。</p></details>
+    </aside>
+    <section class="calendar-area" aria-label="2026 年 9 月喂饭日历">
+      <div class="paper-heading"><span>妙妙大王的九月</span><span class="small-hint">喂完再打勾 · 自动保存</span></div>
+      <p class="mobile-hint">左右滑动查看整张日历，点击当天格子打勾</p>
+      <div class="calendar-scroll"><div class="paper" id="calendar"><img src="calendar.webp" alt="妙妙的九月喂饭日历，顶部是九只猫的合照，下方每天配有猫咪照片。9月2日起50克，每两天增加5克，9月10日起每天70克。" width="2480" height="3508" draggable="false"></div></div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="weight-dialog" aria-labelledby="weight-title">
+    <div class="feed-heading"><h2 id="weight-title">妙妙的每日体重</h2><button id="close-weight" aria-label="关闭体重记录">×</button></div>
+    <div class="date-picker"><label for="weight-day">记录日期</label><select id="weight-day"></select></div>
+    <p id="weight-source" class="meal-message"></p>
+    <form id="weight-form"><label for="weight-kg">这一天的体重</label><div class="amount-row"><div class="amount-input"><input id="weight-kg" type="number" inputmode="decimal" min="0.01" max="100" step="0.01" required><span>kg</span></div><button type="submit" class="primary">保存体重</button></div></form>
+    <p class="meal-note">未称重时沿用最近一次体重，初始为 3.60 kg。未来日期留空。保存后会更新日历；点日期格里的体重也能修改。</p>
+  </dialog>
+  <dialog id="feed-dialog" aria-labelledby="feed-title">
+    <div class="feed-heading"><h2 id="feed-title">妙妙的分次喂食</h2><button id="close-feed" aria-label="关闭喂食记录">×</button></div>
+    <div class="date-picker"><label for="feed-day">记录日期</label><select id="feed-day"></select><button id="back-today">回到今天</button></div>
+    <div class="meal-summary" aria-live="polite"><div><span>当日目标</span><strong id="meal-target">—</strong></div><div><span>累计已喂</span><strong id="meal-total">—</strong></div><div><span id="remaining-label">还差</span><strong id="meal-remaining">—</strong></div></div>
+    <p id="meal-message" class="meal-message" aria-live="polite"></p>
+    <form id="feed-form"><label for="meal-grams">本次喂了多少粮？</label><div class="amount-row"><div class="amount-input"><input id="meal-grams" type="number" inputmode="decimal" min="0.1" max="1000" step="0.1" placeholder="例如 20" required><span>g</span></div><button id="add-meal" type="submit" class="primary">记下这一顿</button></div></form>
+    <div class="meal-history-heading"><h3>每次喂食记录</h3><span id="meal-count"></span></div><ul id="meal-history" class="meal-history"></ul>
+    <p class="meal-note">自动累计、自动保存。打勾仍由你决定；撤销后该次记录不再显示，也不计入累计。</p>
+  </dialog>
+  <dialog id="restore-dialog"><h2>恢复这份备份？</h2><p>将恢复备份中的勾选状态、分次喂食和体重记录。相同编号或日期的记录会更新，其他记录保留；重复导入不会重复累计。</p><div class="dialog-actions"><button id="cancel-restore">取消</button><button id="confirm-restore" class="primary">恢复记录</button></div></dialog>
+</body>
+</html>
