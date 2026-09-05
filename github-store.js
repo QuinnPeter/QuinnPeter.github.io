@@ -48,7 +48,7 @@
   function encode(value){const bytes=new TextEncoder().encode(JSON.stringify(value,null,2));let text='';for(const b of bytes)text+=String.fromCharCode(b);return btoa(text);}
   function decode(value){return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(value.replace(/\s/g,'')),c=>c.charCodeAt(0))));}
   class GitHubStore{
-    constructor({token,owner='QuinnPeter',repo='miaomiao-data',branch='main',fetcher=fetch}){this.token=token;this.owner=owner;this.repo=repo;this.branch=branch;this.fetcher=fetcher;this.base=`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;this.path='/contents/calendar-2026-09.json';this.checked=false;}
+    constructor({token,owner='QuinnPeter',repo='miaomiao-data',branch='main',fetcher=(...args)=>fetch(...args)}){this.token=token;this.owner=owner;this.repo=repo;this.branch=branch;this.fetcher=fetcher;this.base=`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;this.path='/contents/calendar-2026-09.json';this.checked=false;}
     async request(path,body){
       const r=await this.fetcher(this.base+path,{method:body?'PUT':'GET',headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${this.token}`,'X-GitHub-Api-Version':'2026-03-10',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:AbortSignal.timeout(15000)});
       if(!r.ok){const e=new Error(r.status===401?'授权已失效，请重新连接':r.status===403?'无法访问，请检查仓库权限或稍后重试':r.status===404?'找不到私有仓库或记录文件，请检查授权':r.status===409?'另一台设备刚刚更新，正在合并':'GitHub 暂时无法保存，请稍后重试');e.status=r.status;throw e;}return r.json();
