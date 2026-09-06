@@ -26,6 +26,7 @@ function meals(){
 function total(day){return meals().filter(m=>m.day===day&&!m.deletedAt).reduce((sum,m)=>sum+m.tenths,0);}
 function remaining(day){const diff=target(day)*10-total(day);return diff>0?`还差 ${amount(diff)} g`:diff===0?'已达标':`已达标，超出 ${amount(-diff)} g`;}
 function accept(data){if((data.revision||0)>=(state.revision||0))state=data;}
+const rewards=window.CatRewards?.create();
 let cloud=null;
 async function api(path,body){
   if(!cloud)throw new Error('请先连接私有仓库');
@@ -34,15 +35,16 @@ async function api(path,body){
   return cloud.write(body);
 }
 
-function enqueue(op){if(!loaded)return;op.id=op.id||crypto.randomUUID();queue[op.id]=op;cache();render();status('正在保存…',true);flush();}
+function enqueue(op){if(!loaded)return;op.id=op.id||crypto.randomUUID();rewards?.capture(op,{done:isDone(op.day),total:total(op.day)});queue[op.id]=op;cache();render();status('正在保存…',true);flush();}
 async function flush(){
   if(busy)return;busy=true;clearTimeout(retryTimer);
   try{
     while(Object.keys(queue).length){
       const op=Object.values(queue)[0];
-      try{accept(await api(op.kind,op));delete queue[op.id];}
-      catch(e){if(e.validation){delete queue[op.id];toast('这条记录未保存：'+e.message);}else throw e;}
-      cache();render();
+      let saved;
+      try{saved=await api(op.kind,op);accept(saved);delete queue[op.id];}
+      catch(e){if(e.validation){delete queue[op.id];rewards?.discard(op.id);toast('这条记录未保存：'+e.message);}else throw e;}
+      cache();render();if(saved)rewards?.committed(op,saved,Object.values(queue));
     }
     status(cacheOK?'已同步至私有仓库':'已同步至私有仓库 · 浏览器缓存不可用');
   }catch{status('尚未同步 · 操作已保留，请检查网络或重新授权',true);retryTimer=setTimeout(flush,15000);}
@@ -199,7 +201,7 @@ $('reconnect').onclick=()=>showAuth('输入新的授权钥匙后重新连接；�
 $('logout').onclick=()=>{
   if(busy||Object.keys(queue).length){toast('请先完成同步，再退出');return;}
   localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem(TOKEN_KEY);localStorage.removeItem(KEY);
-  cloud=null;loaded=false;state=CloudData.empty();queue={};render();$('workspace').hidden=true;$('connection-tools').hidden=true;
+  rewards?.clear();cloud=null;loaded=false;state=CloudData.empty();queue={};render();$('workspace').hidden=true;$('connection-tools').hidden=true;
   showAuth();status('尚未连接私有记录');
 };
 createCalendar();render();
