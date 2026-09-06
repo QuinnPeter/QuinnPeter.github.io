@@ -18,3 +18,10 @@
 @keyframes cat-reward-tick{0%,15%{opacity:0;transform:scale(.5) rotate(-15deg)}35%,82%{opacity:1;transform:scale(1) rotate(0)}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.cat-reward *{animation:none!important}.cat-reward[data-play=check] .cat-reward-tick{opacity:1}}
 @media print{.cat-reward{display:none!important}}
+
+/* The existing two actions, with the approved illustrated card appearance. */
+.today-card #open-today-record.cat-action,.today-card #today-action.cat-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;width:100%;min-height:132px;margin-top:12px;padding:12px 8px;background:#f6f3e7;color:#705740;border:1px solid #e1dccb;border-radius:18px;font-size:18px;line-height:1.4;font-weight:400;box-shadow:none}
+.today-card .cat-action img{display:block;width:82px;height:78px;object-fit:contain;mix-blend-mode:multiply;pointer-events:none}
+.today-card #open-today-record.cat-action:hover,.today-card #today-action.cat-action:hover{background:#edf0e1;border-color:#b9c7a8}
+.today-card #today-action.cat-action.is-done{background:#e6ecd9;color:#405d3f;border-color:#8a9f79}
+@media(max-width:720px){.today-card #open-today-record.cat-action,.today-card #today-action.cat-action{font-size:16px;min-height:120px;gap:6px;padding:10px 5px;border-radius:15px}.today-card .cat-action img{width:74px;height:70px}}

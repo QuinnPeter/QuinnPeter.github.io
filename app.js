@@ -66,11 +66,11 @@ function render(){
   if(t.active){
     $('today-label').textContent='今天 · 上海时间';$('today-date').textContent=`9 月 ${t.day} 日`;
     $('today-portion').textContent=`目标 ${target(t.day)} g\n累计已喂 ${amount(total(t.day))} g\n${remaining(t.day)}`;
-    $('open-today-record').textContent='记录本次喂食';$('today-action').textContent=isDone(t.day)?'✓ 今天已打勾':'完成今天，打个勾';
+    $('open-today-record-label').textContent='记一顿饭';$('today-action-label').textContent=isDone(t.day)?'✓ 已打勾':'完成打勾';
     $('today-action').classList.toggle('is-done',isDone(t.day));$('today-action').disabled=!loaded;
   }else{
     $('today-label').textContent='九月记录';$('today-date').textContent='妙妙的 29 顿日常';$('today-portion').textContent='9 月 2 日起，每天记一勾';
-    $('open-today-record').textContent='查看分次喂食';$('today-action').textContent='查看日历';$('today-action').disabled=false;
+    $('open-today-record-label').textContent='查看分次喂食';$('today-action-label').textContent='查看日历';$('today-action').disabled=false;
   }
   renderMeals();renderWeights();
 }
