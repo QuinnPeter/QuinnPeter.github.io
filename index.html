@@ -5,7 +5,7 @@
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#edf3ee">
   <title>妙妙的喂饭日历</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🐾%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js"></script><link rel="stylesheet" href="cat-rewards.css?v=2"><script defer src="cat-rewards.js?v=1"></script><script defer src="app.js?v=cats2"></script>
+  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js"></script><link rel="stylesheet" href="cat-rewards.css?v=3"><script defer src="cat-rewards.js?v=1"></script><script defer src="app.js?v=cats2"></script>
 </head>
 <body>
   <header class="topbar"><a href="#" class="brand"><span aria-hidden="true">🐾</span> 妙妙的喂饭日历</a><span class="edition">2026 · 九月</span><span id="save-status" role="status" aria-live="polite">正在读取记录…</span></header>
@@ -27,8 +27,10 @@
         <span class="card-kicker" id="today-label">今天</span><div class="today-date" id="today-date">—</div>
         <div id="today-portion" class="portion"></div>
         <button id="open-weight" class="weight-today" disabled><span>今日体重</span><strong id="today-weight">3.60 kg</strong><small id="today-weight-source">初始体重</small><span class="weight-edit">记录 / 修改 ›</span></button>
+        <div class="cat-action-row">
         <button id="open-today-record" class="primary cat-action" disabled><img src="cat-meal-hd.webp" alt="" width="82" height="78"><span id="open-today-record-label">记一顿饭</span></button>
         <button id="today-action" class="primary cat-action" disabled><img src="cat-check-hd.webp" alt="" width="82" height="78"><span id="today-action-label">完成打勾</span></button>
+        </div>
       </section>
       <section class="progress-card" aria-label="本月完成进度">
         <div class="progress-heading"><span>九月的小成就</span><span><strong id="completed">0</strong><span class="muted"> / 29 天</span></span></div>
