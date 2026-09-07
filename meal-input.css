@@ -1,0 +1,15 @@
+.meal-mode{display:flex;gap:6px;padding:4px;background:#edf1e8;border-radius:12px;margin-bottom:16px}
+.meal-mode button{flex:1;padding:8px 5px;border:0;background:transparent;color:#6d7d67;font-size:13px;border-radius:9px}
+.meal-mode button[aria-pressed=true]{background:#fffdf7;color:#705740;box-shadow:0 1px 4px #405b4010}
+.meal-weigh-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.meal-weigh-grid label,.meal-direct-label{display:block;margin-bottom:7px;font-size:13px}
+.meal-weigh-grid .amount-input{padding:0 10px}
+.meal-weigh-grid input{font-size:20px}
+.meal-calculated{margin:13px 0 0;padding:12px 14px;border-radius:12px;background:#edf2e6}
+.meal-calculated output{display:block;color:#476948;font-size:18px;font-weight:500}
+.meal-calculated output.invalid{color:#995b3d;font-size:13px}
+.meal-calculated small{display:block;margin-top:4px;color:#788674;font-size:12px}
+.meal-weigh-note{color:#7c8874;font-size:11px;line-height:1.6;margin:9px 0 0}
+#feed-form #add-meal{width:100%;margin-top:12px}
+#meal-input-error{margin:6px 0 0;font-size:12px;color:#995b3d}
+#meal-input-error:empty{display:none}

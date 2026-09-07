@@ -26,6 +26,7 @@ function meals(){
 function total(day){return meals().filter(m=>m.day===day&&!m.deletedAt).reduce((sum,m)=>sum+m.tenths,0);}
 function remaining(day){const diff=target(day)*10-total(day);return diff>0?`还差 ${amount(diff)} g`:diff===0?'已达标':`已达标，超出 ${amount(-diff)} g`;}
 function accept(data){if((data.revision||0)>=(state.revision||0))state=data;}
+const mealInput=window.MealInput.create(document);
 const rewards=window.CatRewards?.create();
 let cloud=null;
 async function api(path,body){
@@ -117,7 +118,7 @@ function renderMeals(){
     li.append(time,qty,tag,btn);list.append(li);
   }
 }
-function openMeals(day){selectedDay=day;$('feed-day').value=String(day);$('meal-grams').value='';if(!$('feed-dialog').open)$('feed-dialog').showModal();renderMeals();$('meal-grams').focus();}
+function openMeals(day){selectedDay=day;$('feed-day').value=String(day);mealInput.reset();if(!$('feed-dialog').open)$('feed-dialog').showModal();renderMeals();mealInput.focus();}
 function createCalendar(){
   const L=88,T=1208,cw=2304/7,rh=2092/5;
   for(let day=2;day<=30;day++){
@@ -148,13 +149,13 @@ $('weight-form').onsubmit=event=>{
 $('today-action').onclick=()=>{const t=today();if(t.active)enqueue({kind:'entry',day:t.day,done:!isDone(t.day)});else $('calendar').scrollIntoView({behavior:'smooth'});};
 $('open-today-record').onclick=$('open-records').onclick=()=>openMeals(today().active?today().day:2);
 $('close-feed').onclick=()=>$('feed-dialog').close();
-$('feed-day').onchange=()=>{selectedDay=Number($('feed-day').value);$('meal-grams').value='';renderMeals();};
+$('feed-day').onchange=()=>{selectedDay=Number($('feed-day').value);mealInput.reset();renderMeals();};
 $('back-today').onclick=()=>openMeals(today().active?today().day:2);
 $('feed-form').onsubmit=event=>{
   event.preventDefault();if(!loaded)return;
-  const raw=$('meal-grams').value.trim(),n=Number(raw);
-  if(!/^\d+(\.\d)?$/.test(raw)||!Number.isFinite(n)||n<.1||n>1000){toast('请输入 0.1–1000 g，最多一位小数');return;}
-  $('meal-grams').value='';enqueue({kind:'meal',day:selectedDay,grams:n,recordedAt:new Date().toISOString()});$('meal-grams').focus();
+  const result=mealInput.read();if(result.error)return;
+  const n=result.grams;
+  mealInput.reset();enqueue({kind:'meal',day:selectedDay,grams:n,recordedAt:new Date().toISOString()});mealInput.focus();
 };
 $('export').onclick=async()=>{
   if(Object.keys(queue).length){await flush();if(Object.keys(queue).length){toast('还有记录未同步到私有仓库，请稍后再导出');return;}}

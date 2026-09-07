@@ -5,7 +5,7 @@
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#edf3ee">
   <title>妙妙的喂饭日历</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🐾%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js"></script><link rel="stylesheet" href="cat-rewards.css?v=3"><script defer src="cat-rewards.js?v=1"></script><script defer src="app.js?v=cats2"></script>
+  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js"></script><link rel="stylesheet" href="cat-rewards.css?v=3"><script defer src="cat-rewards.js?v=1"></script><link rel="stylesheet" href="meal-input.css?v=1"><script defer src="meal-input.js?v=1"></script><script defer src="app.js?v=weigh1"></script>
 </head>
 <body>
   <header class="topbar"><a href="#" class="brand"><span aria-hidden="true">🐾</span> 妙妙的喂饭日历</a><span class="edition">2026 · 九月</span><span id="save-status" role="status" aria-live="polite">正在读取记录…</span></header>
@@ -61,7 +61,20 @@
     <div class="date-picker"><label for="feed-day">记录日期</label><select id="feed-day"></select><button id="back-today">回到今天</button></div>
     <div class="meal-summary" aria-live="polite"><div><span>当日目标</span><strong id="meal-target">—</strong></div><div><span>累计已喂</span><strong id="meal-total">—</strong></div><div><span id="remaining-label">还差</span><strong id="meal-remaining">—</strong></div></div>
     <p id="meal-message" class="meal-message" aria-live="polite"></p>
-    <form id="feed-form"><label for="meal-grams">本次喂了多少粮？</label><div class="amount-row"><div class="amount-input"><input id="meal-grams" type="number" inputmode="decimal" min="0.1" max="1000" step="0.1" placeholder="例如 20" required><span>g</span></div><button id="add-meal" type="submit" class="primary">记下这一顿</button></div></form>
+    <form id="feed-form">
+      <div class="meal-mode" role="group" aria-label="喂食量输入方式"><button id="meal-mode-weigh" type="button" aria-pressed="true">称重计算</button><button id="meal-mode-direct" type="button" aria-pressed="false">直接输入克数</button></div>
+      <div id="meal-weigh-fields">
+        <div class="meal-weigh-grid">
+          <div><label for="meal-initial">初始重量</label><div class="amount-input"><input id="meal-initial" type="number" inputmode="decimal" min="0" max="10000" step="0.1" placeholder="例如 150" aria-describedby="meal-weigh-note" required><span>g</span></div></div>
+          <div><label for="meal-ending">结束重量</label><div class="amount-input"><input id="meal-ending" type="number" inputmode="decimal" min="0" max="10000" step="0.1" placeholder="例如 130" aria-describedby="meal-weigh-note" required><span>g</span></div></div>
+        </div>
+        <div class="meal-calculated" aria-live="polite"><output id="meal-calculation" for="meal-initial meal-ending">本次吃了 — g</output><small id="meal-formula">初始重量 − 结束重量</small></div>
+        <p id="meal-weigh-note" class="meal-weigh-note">两次用同一只碗称重，或都去皮称粮。确认后点击下方按钮，将吃掉的克数计入当天。</p>
+      </div>
+      <div id="meal-direct-fields" hidden><label for="meal-grams" class="meal-direct-label">本次喂了多少粮？</label><div class="amount-input"><input id="meal-grams" type="number" inputmode="decimal" min="0.1" max="1000" step="0.1" placeholder="例如 20" disabled><span>g</span></div></div>
+      <p id="meal-input-error" role="alert"></p>
+      <button id="add-meal" type="submit" class="primary">记下这一顿</button>
+    </form>
     <div class="meal-history-heading"><h3>每次喂食记录</h3><span id="meal-count"></span></div><ul id="meal-history" class="meal-history"></ul>
     <p class="meal-note">自动累计、自动保存。打勾仍由你决定；撤销后该次记录不再显示，也不计入累计。</p>
   </dialog>
