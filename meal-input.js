@@ -15,7 +15,7 @@
     const tenths=start-end;
     if(tenths===0)return {error:'两次重量相同，本次吃了 0 g，无需记录。'};
     if(tenths>10000)return {error:'本次吃掉的粮食不能超过 1000 g，请检查称重数值。'};
-    return {grams:tenths/10,formula:`${text(start)} − ${text(end)} = ${text(tenths)} g`};
+    return {grams:tenths/10,weighing:{initialTenths:start,endingTenths:end},formula:`${text(start)} − ${text(end)} = ${text(tenths)} g`};
   }
   function create(doc){
     const $=id=>doc.getElementById(id);

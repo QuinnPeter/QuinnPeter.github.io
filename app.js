@@ -1,5 +1,5 @@
 const APP='miaomiao-feeding-2026-09', KEY=APP+':github-cache:QuinnPeter/miaomiao-data', $=id=>document.getElementById(id);
-let state={app:APP,version:3,month:'2026-09',entries:{},meals:[],weights:{},revision:0};
+let state={app:APP,version:4,month:'2026-09',entries:{},meals:[],weights:{},revision:0};
 let queue={}, loaded=false, busy=false, cacheOK=true, retryTimer, toastTimer, backup, selectedDay=2;
 function cache(){try{localStorage.setItem(KEY,JSON.stringify({state,queue}));}catch{cacheOK=false;}}
 function readCache(){try{
@@ -18,7 +18,7 @@ function isDone(day){let done=state.entries[day]?.done||false;for(const op of Ob
 function meals(){
   const map=new Map((state.meals||[]).map(m=>[m.id,{...m}]));
   for(const op of Object.values(queue)){
-    if(op.kind==='meal'&&!map.has(op.id))map.set(op.id,{id:op.id,day:op.day,tenths:Math.round(op.grams*10),recordedAt:op.recordedAt,deletedAt:null,pending:true});
+    if(op.kind==='meal'&&!map.has(op.id))map.set(op.id,{id:op.id,day:op.day,tenths:Math.round(op.grams*10),...(op.weighing?{weighing:op.weighing}:{}),recordedAt:op.recordedAt,deletedAt:null,pending:true});
     if(op.kind==='meal-status'&&map.has(op.mealId))map.set(op.mealId,{...map.get(op.mealId),deletedAt:op.deleted?op.recordedAt:null,pending:true});
   }
   return [...map.values()].sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.id.localeCompare(b.id));
@@ -115,7 +115,9 @@ function renderMeals(){
     const btn=document.createElement('button');btn.type='button';btn.textContent='撤销';btn.disabled=!loaded;
     btn.setAttribute('aria-label',`撤销 ${time.textContent} 的 ${amount(m.tenths)} 克记录`);
     btn.onclick=()=>enqueue({kind:'meal-status',mealId:m.id,deleted:true,recordedAt:new Date().toISOString()});
-    li.append(time,qty,tag,btn);list.append(li);
+    const details=document.createElement('div');details.className='meal-quantity';details.append(qty);
+    if(m.weighing){const formula=document.createElement('small');formula.textContent=`${amount(m.weighing.initialTenths)} − ${amount(m.weighing.endingTenths)} g`;details.append(formula);}
+    li.append(time,details,tag,btn);list.append(li);
   }
 }
 function openMeals(day){selectedDay=day;$('feed-day').value=String(day);mealInput.reset();if(!$('feed-dialog').open)$('feed-dialog').showModal();renderMeals();mealInput.focus();}
@@ -155,7 +157,7 @@ $('feed-form').onsubmit=event=>{
   event.preventDefault();if(!loaded)return;
   const result=mealInput.read();if(result.error)return;
   const n=result.grams;
-  mealInput.reset();enqueue({kind:'meal',day:selectedDay,grams:n,recordedAt:new Date().toISOString()});mealInput.focus();
+  mealInput.reset();enqueue({kind:'meal',day:selectedDay,grams:n,...(result.weighing?{weighing:result.weighing}:{}),recordedAt:new Date().toISOString()});mealInput.focus();
 };
 $('export').onclick=async()=>{
   if(Object.keys(queue).length){await flush();if(Object.keys(queue).length){toast('还有记录未同步到私有仓库，请稍后再导出');return;}}
@@ -167,7 +169,7 @@ $('import').onclick=()=>{if(busy||Object.keys(queue).length){toast('请等当前
 $('file').onchange=async event=>{
   const file=event.target.files[0];event.target.value='';if(!file)return;
   try{if(file.size>2000000)throw new Error();const data=JSON.parse(await file.text());
-    if(data.app!==APP||![1,2,3].includes(data.version)||data.month!=='2026-09'||!data.entries||Array.isArray(data.entries))throw new Error();
+    if(data.app!==APP||![1,2,3,4].includes(data.version)||data.month!=='2026-09'||!data.entries||Array.isArray(data.entries))throw new Error();
     for(const [day,value] of Object.entries(data.entries))if(!/^([2-9]|[12][0-9]|30)$/.test(day)||typeof value?.done!=='boolean')throw new Error();
     backup=data;backupOpId=crypto.randomUUID();$('restore-dialog').showModal();
   }catch{toast('这不是有效的妙妙九月日历备份');}
