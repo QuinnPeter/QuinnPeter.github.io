@@ -26,6 +26,7 @@ function meals(){
 function total(day){return meals().filter(m=>m.day===day&&!m.deletedAt).reduce((sum,m)=>sum+m.tenths,0);}
 function remaining(day){const diff=target(day)*10-total(day);return diff>0?`还差 ${amount(diff)} g`:diff===0?'已达标':`已达标，超出 ${amount(-diff)} g`;}
 function accept(data){if((data.revision||0)>=(state.revision||0))state=data;}
+const weightChart=window.WeightChart.create(document);
 const mealInput=window.MealInput.create(document);
 const rewards=window.CatRewards?.create();
 let cloud=null;
@@ -81,6 +82,7 @@ function weightFor(day){return WeightModel.effective(weightMap(),day,todayISO())
 const weightText=w=>(w.hundredths/100).toFixed(2)+' kg';
 const weightSource=w=>w.measured?'当天已记录':w.sourceDay?`沿用 9 月 ${w.sourceDay} 日体重`:'沿用初始体重';
 function renderWeights(){
+  weightChart.render(weightMap(),todayISO());
   const date=todayISO(),t=today(),current=date.startsWith('2026-09')?weightFor(t.day):null;
   $('open-weight').disabled=!loaded||!current;
   $('today-weight').textContent=current?weightText(current):'—';

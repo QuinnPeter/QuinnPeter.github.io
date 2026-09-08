@@ -5,7 +5,7 @@
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#edf3ee">
   <title>妙妙的喂饭日历</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🐾%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js?v=weigh2"></script><link rel="stylesheet" href="cat-rewards.css?v=3"><link rel="stylesheet" href="feeding-plan.css?v=1"><script defer src="feeding-plan.js?v=1"></script><script defer src="cat-rewards.js?v=plan55"></script><link rel="stylesheet" href="meal-input.css?v=2"><script defer src="meal-input.js?v=2"></script><script defer src="app.js?v=plan55"></script>
+  <link rel="stylesheet" href="style.css?v=cloud1"><script defer src="weight-model.js"></script><script defer src="github-store.js?v=weigh2"></script><link rel="stylesheet" href="cat-rewards.css?v=3"><link rel="stylesheet" href="feeding-plan.css?v=1"><script defer src="feeding-plan.js?v=1"></script><script defer src="cat-rewards.js?v=plan55"></script><link rel="stylesheet" href="meal-input.css?v=2"><script defer src="meal-input.js?v=2"></script><link rel="stylesheet" href="weight-chart.css?v=1"><script defer src="weight-chart.js?v=1"></script><script defer src="app.js?v=chart1"></script>
 </head>
 <body>
   <header class="topbar"><a href="#" class="brand"><span aria-hidden="true">🐾</span> 妙妙的喂饭日历</a><span class="edition">2026 · 九月</span><span id="save-status" role="status" aria-live="polite">正在读取记录…</span></header>
@@ -39,6 +39,7 @@
       </section>
       <p class="instruction">点击日历里当天的格子即可打勾；再次点击，可以取消。</p>
       <button id="open-records" class="records-button">查看 / 补记分次喂食</button>
+      <a class="weight-trend-link" href="#weight-trend">查看体重走势 ↗</a>
       <div class="backup-tools"><button id="export">导出备份</button><button id="import">恢复备份</button><input id="file" type="file" accept=".json,application/json" hidden></div>
       <details><summary>记录保存在哪里？</summary><p>记录保存到你的 GitHub 私有仓库，手机和电脑共用同一份记录。显示“已同步至私有仓库”表示写入成功；离线操作会先暂存在当前浏览器，连接后再同步。</p><p>换设备后重新授权即可读取记录。请偶尔导出一份备份。退出会清除当前浏览器的授权与记录缓存，不会删除仓库里的记录。</p></details>
     </aside>
@@ -46,6 +47,16 @@
       <div class="paper-heading"><span>妙妙大王的九月</span><span class="small-hint">喂完再打勾 · 自动保存</span></div>
       <p class="mobile-hint">左右滑动查看整张日历，点击当天格子打勾</p>
       <div class="calendar-scroll"><div class="paper" id="calendar"><img src="calendar.webp" alt="妙妙的九月喂饭日历，顶部是九只猫的合照，下方每天配有猫咪照片。9月2日至3日每天50克，4日至5日每天55克，6日至7日每天60克；9月8日起每天55克。" width="2480" height="3508" draggable="false"></div></div>
+      <section id="weight-trend" class="weight-trend" aria-labelledby="weight-trend-title">
+        <div class="weight-trend-heading"><div><h2 id="weight-trend-title">妙妙的体重小曲线</h2><p id="weight-chart-period">从首次称重，记录每一点成长</p></div><div class="weight-trend-latest"><strong id="weight-chart-latest">—</strong><small id="weight-chart-change">初始体重 3.60 kg</small></div></div>
+        <p id="weight-chart-empty">记录第一次体重后，这里就会出现妙妙的成长曲线。</p>
+        <div id="weight-chart-body" hidden>
+          <div class="weight-chart-scroll" tabindex="0" role="region" aria-label="体重折线图，日期较多时可左右滑动"><div id="weight-chart-canvas"><svg id="weight-chart-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="每日体重，单位千克"></svg></div></div>
+          <div class="weight-chart-legend"><span class="measured">当天实测</span><span>沿用前次体重</span></div>
+          <p id="weight-chart-detail" role="status" aria-live="polite"></p>
+          <p class="weight-chart-note">仅展示首次记录至当天的体重，未称重的日期沿用前次值。点击圆点查看详情；日期较多时，可左右滑动。纵轴单位：kg。</p>
+        </div>
+      </section>
     </section>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

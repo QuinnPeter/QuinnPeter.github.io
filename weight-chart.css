@@ -1,0 +1,19 @@
+.weight-trend{margin-top:26px;padding:24px;border:1px solid #dce5d6;border-radius:20px;background:#fbfcf6;scroll-margin-top:24px}
+.weight-trend-heading{display:flex;justify-content:space-between;gap:16px;align-items:start;margin-bottom:18px}
+.weight-trend h2{font:30px/1.25 Hand,'Microsoft YaHei',sans-serif;color:#7e3e13;font-weight:400;margin:0 0 7px}
+.weight-trend-heading p{font-size:12px;color:#7d8e78;margin:0}
+.weight-trend-latest{text-align:right;flex-shrink:0}.weight-trend-latest strong{display:block;color:#476947;font:30px/1.2 Hand,'Microsoft YaHei',sans-serif;font-weight:400}
+.weight-trend-latest small{display:block;font-size:11px;color:#7d8e78;margin-top:6px}
+.weight-chart-scroll{overflow-x:auto;overscroll-behavior-x:contain;border-radius:10px}
+#weight-chart-svg{display:block;width:100%;height:240px;overflow:visible}
+.weight-axis{font:11px system-ui,'Microsoft YaHei',sans-serif;fill:#778875}
+.weight-grid{stroke:#e2e9dd;stroke-width:1}.weight-line{stroke:#6a8c66;stroke-width:2.4;stroke-linecap:round}.weight-line.carried{stroke-dasharray:5 5;stroke:#92a68a}
+.weight-hit{fill:transparent}.weight-dot{stroke:#6a8c66;stroke-width:2;fill:#fbfcf6}.weight-point.measured .weight-dot{fill:#6a8c66}
+.weight-point{cursor:pointer;outline:none}.weight-point.selected .weight-dot,.weight-point:focus-visible .weight-dot{stroke:#7e3e13;stroke-width:3;fill:#f2e4d3}
+.weight-chart-legend{display:flex;gap:18px;align-items:center;font-size:11px;color:#7d8e78;margin:10px 0}
+.weight-chart-legend span::before{content:'';display:inline-block;width:8px;height:8px;border:1.5px solid #6a8c66;border-radius:50%;margin-right:6px;vertical-align:middle}.weight-chart-legend .measured::before{background:#6a8c66}
+#weight-chart-detail{font-size:13px;line-height:1.7;color:#476247;background:#edf2e6;border-radius:10px;padding:10px 13px;margin:12px 0}
+.weight-chart-note,#weight-chart-empty{font-size:12px;line-height:1.8;color:#84907e;margin:0}
+#weight-chart-empty{padding:30px 0;text-align:center}
+.weight-trend-link{display:block;text-align:center;margin:10px 0 0;font-size:12px;color:#5f7d5c;text-underline-offset:3px}
+@media(max-width:720px){.weight-trend{padding:17px;margin-top:20px}.weight-trend h2{font-size:27px}.weight-trend-latest strong{font-size:27px}.weight-trend-link{grid-column:1/-1;margin:0}.weight-trend-heading{gap:8px}}
