@@ -1,7 +1,8 @@
 /* Visual feedback only. Never writes feeding records or credentials. */
 (function(root){
   'use strict';
-  const goalFor=day=>Math.min(70,50+Math.floor((day-2)/2)*5)*10;
+  const plan=typeof module!=='undefined'&&module.exports?require('./feeding-plan.js'):root.FeedingPlan;
+  const goalFor=day=>plan.target(day)*10;
   class Tracker{
     constructor(){this.intents=new Map();this.goals=new Set();}
     capture(op,before={},now=Date.now()){

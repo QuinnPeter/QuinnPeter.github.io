@@ -12,7 +12,7 @@ function readCache(){try{
 function status(text,warn=false){$('save-status').textContent=text;$('save-status').classList.toggle('pending',warn);}
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500);}
 function today(){const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));return {active:p.year==='2026'&&p.month==='09'&&Number(p.day)>=2,day:Number(p.day)};}
-const target=day=>Math.min(70,50+Math.floor((day-2)/2)*5);
+const target=FeedingPlan.target;
 const amount=n=>(n/10).toFixed(1).replace(/\.0$/,'');
 function isDone(day){let done=state.entries[day]?.done||false;for(const op of Object.values(queue))if(op.kind==='entry'&&op.day===day)done=op.done;return done;}
 function meals(){
@@ -129,6 +129,7 @@ function createCalendar(){
     const input=document.createElement('input');input.type='checkbox';input.id='day-'+day;input.disabled=true;
     const tick=document.createElement('span');tick.className='check';tick.setAttribute('aria-hidden','true');tick.innerHTML='<svg viewBox="0 0 32 32"><path d="M6 17 L13 24 L27 7" fill="none" stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     label.append(input,tick);$('calendar').append(label);input.onchange=()=>enqueue({kind:'entry',day,done:input.checked});
+    if(day>=FeedingPlan.changedFrom){const badge=document.createElement('span');badge.className='calendar-target';badge.textContent=target(day)+'g';badge.setAttribute('aria-hidden','true');label.append(badge);}
     const option=document.createElement('option');option.value=day;option.textContent=`9 月 ${day} 日 · ${target(day)} g`+(today().active&&today().day===day?' · 今天':'');$('feed-day').append(option);
   }
   for(let day=1;day<=30;day++){
